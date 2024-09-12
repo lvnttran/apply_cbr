@@ -13,7 +13,6 @@ class GUI(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.predictor = Predictor()
         self.kd_cbrs = {}
-
         self.ui.btn_data_processing.clicked.connect(self.processing_data)
         self.ui.btn_autolabel.clicked.connect(self.predict_data)
         self.ui.btn_calculate2.clicked.connect(self.predict_data_cbr)
@@ -22,8 +21,8 @@ class GUI(QtWidgets.QMainWindow):
         self.load_kd_cbr()
 
     def load_kd_cbr(self):
-        for config in self.ui.config:
-            self.kd_cbrs[config] = KdCbrBase(self.ui.config[config])
+        for config in self.ui.config['cbr']:
+            self.kd_cbrs[config] = KdCbrBase(self.ui.config['cbr'][config])
 
     def processing_data(self):
         lineEdits = self.ui.get_line_edit_select()
@@ -60,15 +59,23 @@ class GUI(QtWidgets.QMainWindow):
         if lineEdits is not None:
             data = [float(lineEdit.text()) for _, lineEdit in lineEdits]
             kq = self.predictor.predict(data)
-            kq = kq if kq in self.ui.data else "None"
+            kq = kq if kq in self.ui.config['program']['data'] else "None"
             self.ui.comboBox_label.setCurrentText(kq)
             self.ui.add_label_to_log_programs(type=0, text=f'Result: {kq}')
 
     def calculate_form1(self):
         if self.processing_data():
             label = self.ui.comboBox_label.currentText()
-            if label in self.ui.data_keys:
-                indexs = [self.ui.values.index(key) for key in self.ui.data_keys[label]]
+            # [label]['feature_order']
+            if label in self.ui.config['cbr']:
+                indexs = []
+
+                for key in self.ui.config['cbr'][label]['feature_order']:
+                    if key in self.ui.config['program']['key']:
+                        indexs.append(self.ui.config['program']['key'].index(key))
+                    else:
+                        QtWidgets.QMessageBox.warning(self, 'Error', 'Internal error!')
+                        return None
                 lineEdits = self.ui.get_line_edit_select()
                 data = [float(lineEdit.text()) for _, lineEdit in lineEdits]
                 values = [self.ui.format_number(data[index]) for index in indexs]
@@ -80,7 +87,7 @@ class GUI(QtWidgets.QMainWindow):
 
     def set_calculate_form2(self, label, values):
         self.ui.comboBox_label2.setCurrentText(label)
-        lineEdits = self.ui.get_line_edit_form_2()
+        lineEdits = self.ui.get_line_edit_form2()
         for i, lineEdit in enumerate(lineEdits):
             lineEdit.setText(str(values[i]))
         self.ui.tabWidget.setCurrentIndex(1)

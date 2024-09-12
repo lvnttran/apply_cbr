@@ -1,24 +1,53 @@
-J:
-  excel_file: excel\df_sheet_J_nna_nol_tp_dia.xlsx
-  kmeans_model_path: src\models\kmean_J.joblib
-  feature_order:  ['developpé', 'amorce', 'angle', 'diam_circle', 'eps', 'diameter', 'Qte']
-  train_excel_path: excel/df_sheet_J_nna_nol_tp_dia_k_train.xlsx
-  test_excel_path: excel/df_sheet_J_nna_nol_tp_dia_k_test.xlsx
-OT:
-  excel_file: excel\df_sheet_OT_nna_nol_tp_dia.xlsx
-  kmeans_model_path: src\models\kmean_OT.joblib
-  feature_order:  ['Qte', 'diameter', 'developpé', 'amorce', 'angle', 'long larg', 'eps', 'Dimension', 'long', 'larg', 'diam_circle']
-  train_excel_path: excel/df_sheet_OT_nna_nol_tp_dia_k_train.xlsx
-  test_excel_path: excel/df_sheet_OT_nna_nol_tp_dia_k_test.xlsx
-'20':
-  excel_file: excel\df_sheet_20_nna_nol_tp_dia.xlsx
-  kmeans_model_path: src\models\kmean_20.joblib
-  feature_order:  ['Qte', 'developpé', 'eps', 'angle', 'hauteur', 'diameter']
-  train_excel_path: excel/df_sheet_20_nna_nol_tp_dia_k_train.xlsx
-  test_excel_path: excel/df_sheet_20_nna_nol_tp_dia_k_test.xlsx
-B:
-  excel_file: excel\df_sheet_B_nna_nol_tp_dia.xlsx
-  kmeans_model_path: src\models\kmean_B.joblib
-  feature_order:  ['Qte', 'developpé', 'eps', 'angle', 'hauteur', 'diameter']
-  train_excel_path: excel/df_sheet_B_nna_nol_tp_dia_k_train.xlsx
-  test_excel_path: excel/df_sheet_B_nna_nol_tp_dia_k_test.xlsx
+program:        
+  values : ['Angle', 'Long', 'Long larg', 'Diameter', 'Eps', 'Hauteur', 'Amorce', 'Dimension', 'developpé', 'Qte', 'Diam circle', 'Larg']
+  key : ['angle', 'long', 'long larg', 'diameter', 'eps', 'hauteur', 'amorce', 'Dimension', 'developpé', 'Qte', 'diam_circle', 'larg']
+  data : ['None' ,'13', '20', 'B', 'G', 'J', 'M', 'OT', 'T']
+cbr:
+  J:
+    excel_file: excel\df_sheet_J_nna_nol_tp_dia.xlsx
+    kmeans_model_path: src\models\kmean_J.joblib
+    feature_order:  ['developpé', 'amorce', 'angle', 'diam_circle', 'eps', 'diameter', 'Qte']
+    train_excel_path: excel/df_sheet_J_nna_nol_tp_dia_k_train.xlsx
+    test_excel_path: excel/df_sheet_J_nna_nol_tp_dia_k_test.xlsx
+  OT:
+    excel_file: excel\df_sheet_OT_nna_nol_tp_dia.xlsx
+    kmeans_model_path: src\models\kmean_OT.joblib
+    feature_order:  ['Qte', 'diameter', 'developpé', 'amorce', 'angle', 'long larg', 'eps', 'Dimension', 'long', 'larg', 'diam_circle']
+    train_excel_path: excel/df_sheet_OT_nna_nol_tp_dia_k_train.xlsx
+    test_excel_path: excel/df_sheet_OT_nna_nol_tp_dia_k_test.xlsx
+  '20':
+    excel_file: excel\df_sheet_20_nna_nol_tp_dia.xlsx
+    kmeans_model_path: src\models\kmean_20.joblib
+    feature_order:  ['Qte', 'developpé', 'eps', 'angle', 'hauteur', 'diameter']
+    train_excel_path: excel/df_sheet_20_nna_nol_tp_dia_k_train.xlsx
+    test_excel_path: excel/df_sheet_20_nna_nol_tp_dia_k_test.xlsx
+  B:
+    excel_file: excel\df_sheet_B_nna_nol_tp_dia.xlsx
+    kmeans_model_path: src\models\kmean_B.joblib
+    feature_order:  ['Qte', 'developpé', 'eps', 'angle', 'hauteur', 'diameter']
+    train_excel_path: excel/df_sheet_B_nna_nol_tp_dia_k_train.xlsx
+    test_excel_path: excel/df_sheet_B_nna_nol_tp_dia_k_test.xlsx
+  '13':
+    excel_file: excel\df_sheet_13_nna_nol_tp_dia.xlsx
+    kmeans_model_path: src\models\kmean_13.joblib
+    feature_order:  ['Qte', 'eps', 'angle', 'hauteur', 'diameter']
+    train_excel_path: excel/df_sheet_13_nna_nol_tp_dia_k_train.xlsx
+    test_excel_path: excel/df_sheet_13_nna_nol_tp_dia_k_test.xlsx
+  T:
+    excel_file: excel\df_sheet_T_nna_nol_tp_dia.xlsx
+    kmeans_model_path: src\models\kmean_T.joblib
+    feature_order:  ['Qte', 'developpé', 'amorce', 'eps', 'angle', 'long larg', 'diameter']
+    train_excel_path: excel/df_sheet_T_nna_nol_tp_dia_k_train.xlsx
+    test_excel_path: excel/df_sheet_T_nna_nol_tp_dia_k_test.xlsx
+  G:
+    excel_file: excel\df_sheet_G_nna_nol_tp_dia.xlsx
+    kmeans_model_path: src\models\kmean_G.joblib
+    feature_order: ['Qte', 'developpé', 'amorce', 'eps', 'angle', 'Dimension', 'long larg', 'diameter']
+    train_excel_path: excel/df_sheet_G_nna_nol_tp_dia_k_train.xlsx
+    test_excel_path: excel/df_sheet_G_nna_nol_tp_dia_k_test.xlsx
+  M:
+    excel_file: excel\df_sheet_M_nna_nol_tp_dia.xlsx
+    kmeans_model_path: src\models\kmean_M.joblib
+    feature_order: ['Qte', 'developpé', 'amorce', 'eps', 'angle', 'Dimension', 'long larg', 'diameter']
+    train_excel_path: excel/df_sheet_M_nna_nol_tp_dia_k_train.xlsx
+    test_excel_path: excel/df_sheet_M_nna_nol_tp_dia_k_test.xlsx

@@ -3,4 +3,3 @@ numpy
 tensorflow
 scikit-learn
 joblib
-PyYAML

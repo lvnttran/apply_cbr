@@ -4,9 +4,8 @@ from sklearn.neighbors import KDTree
 import joblib
 import json
 
-
 class KdCbrBase():
-    def __init__(self, config) -> None:
+    def __init__(self, config):
         excel_file = config['excel_file']
         kmeans_model_path = config['kmeans_model_path']
         train_excel_path = config['train_excel_path']
@@ -56,7 +55,6 @@ class KdCbrBase():
             }
         except Exception as e:
             return False, str(e)
-
 
     def df_display(self, df_name):
         print(df_name.shape)

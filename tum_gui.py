@@ -18,11 +18,8 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle("CBRChipCalc")
         MainWindow.setWindowIcon(QIcon('icon/2857379.png'))
         MainWindow.resize(1061, 749)
+        self.load_config_cbr()
         self.number_stt = 0
-        self.values =['Angle', 'Long', 'Long larg', 'Diameter', 'Eps', 'Hauteur',
-                            'Amorce', 'Dimension', 'Developpé', 'Qte', 'Diam circle', 'Larg']
-        
-        self.data = ['None' ,'13', '20', 'B', 'G', 'J', 'M', 'OT', 'T']
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.check_state = {}
        #region setupUi
@@ -179,7 +176,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.addWidget(self.label)
         self.comboBox_label2 = QtWidgets.QComboBox(self.widget_2)
         self.comboBox_label2.setObjectName("comboBox_label2")
-        self.comboBox_label2.addItems(self.data)
+        self.comboBox_label2.addItems(self.config['program']['data'])
         self.comboBox_label2.currentTextChanged.connect(lambda x: self.load_params())
         self.horizontalLayout_4.addWidget(self.comboBox_label2)
         self.verticalLayout.addWidget(self.widget_2)
@@ -256,10 +253,13 @@ class Ui_MainWindow(object):
         self.btn_data_processing2 = QtWidgets.QPushButton(self.groupBox_4)
         self.btn_data_processing2.setObjectName("btn_data_processing2")
         self.verticalLayout_11.addWidget(self.btn_data_processing2)
+
         self.btn_calculate2 = QtWidgets.QPushButton(self.groupBox_4)
         self.btn_calculate2.setObjectName("btn_calculate2")
+
         self.verticalLayout_11.addWidget(self.btn_calculate2)
         self.verticalLayout_4.addWidget(self.groupBox_4)
+
         self.widget_3 = QtWidgets.QWidget(self.widget1)
         self.widget_3.setObjectName("widget_3")
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.widget_3)
@@ -310,7 +310,7 @@ class Ui_MainWindow(object):
 
         self.add_tille_data()
         self.btn_data_processing2.clicked.connect(lambda x: self.procesing_data_form2())
-        self.load_config_cbr()
+        
     
     def load_config_cbr(self):
         with open('src/config.yaml', 'r', encoding='utf-8') as file:
@@ -328,7 +328,7 @@ class Ui_MainWindow(object):
             return None
         wiget =checkbox_select.parent()
         values = []
-        for i, value in enumerate(self.values):
+        for i, value in enumerate(self.config['program']['values']):
             lineEdit = wiget.findChild(QtWidgets.QLineEdit, f"lineEdit_{i}")
             values.append((value, lineEdit))
         return values
@@ -361,7 +361,7 @@ class Ui_MainWindow(object):
         label_13.setText("Select")
         horizontalLayout_8.addWidget(label_13)
         
-        for i, value in enumerate(self.values):
+        for i, value in enumerate(self.config['program']['values']):
             label_10 = QtWidgets.QLabel(widget_5)
             label_10.setMinimumSize(QtCore.QSize(100, 0))
             label_10.setMaximumSize(QtCore.QSize(100, 16777215))
@@ -416,7 +416,7 @@ class Ui_MainWindow(object):
         
         horizontalLayout.addWidget(checkBox_3)
 
-        for i, value in enumerate(self.values):
+        for i, value in enumerate(self.config['program']['key']):
             lineEdit_5 = QtWidgets.QLineEdit(widget_6)
             lineEdit_5.setAlignment(QtCore.Qt.AlignCenter)
             lineEdit_5.setStyleSheet("background-color: #EEEDEB;") 
@@ -536,21 +536,25 @@ class Ui_MainWindow(object):
     def load_params(self):
         self.clear_row_form2()
         label = self.comboBox_label2.currentText()
-        if  label in self.config:
-            keys = self.config[label]['feature_order']
+        if  label in self.config['cbr']:
+            keys = self.config['cbr'][label]['feature_order']
             if keys is not None and len(keys)>0:
                 for i, key in enumerate(keys):
                     self.add_key_value(i, key)
             self.add_key_value(-1, 'Cluster')
+            
     def clear_row_form2(self):
         widgets = self.scrollAreaWidgetContents_3.findChildren(QtWidgets.QWidget, QtCore.QRegExp("widget_params"))
         for widget in widgets:
+            lineEdit_3 = widget.findChild(QtWidgets.QLineEdit,  f"lineEdit_{widget.property('i')}")
+            lineEdit_3.setObjectName('')
             self.verticalLayout_5.removeWidget(widget)
             widget.deleteLater()
     
     def add_key_value(self, i, key):
         widget_4 = QtWidgets.QWidget(self.scrollAreaWidgetContents_3)
         widget_4.setObjectName("widget_params")
+        widget_4.setProperty('i', i)
         horizontalLayout_7 = QtWidgets.QHBoxLayout(widget_4)
         horizontalLayout_7.setContentsMargins(0, 0, 0, 3)
         horizontalLayout_7.setObjectName("horizontalLayout_7")
@@ -597,8 +601,8 @@ class Ui_MainWindow(object):
     def get_value_line_edit_form2(self):
         values = []
         label = self.comboBox_label2.currentText()
-        if label in self.config:
-            for i, value in enumerate(self.config[label]['feature_order']):
+        if label in self.config['cbr']:
+            for i, value in enumerate(self.config['cbr'][label]['feature_order']):
                 lineEdit = self.scrollAreaWidgetContents_3.findChild(QtWidgets.QLineEdit, f"lineEdit_{i}")
                 values.append(float(lineEdit.text()))
             return values
@@ -607,8 +611,8 @@ class Ui_MainWindow(object):
     def get_line_edit_form2(self):
         values = []
         label = self.comboBox_label2.currentText()
-        if label in self.data and label in self.data_keys:
-            for i, value in enumerate(self.data_keys[label]):
+        if label in self.config['program']['data'] and label in self.config['program']['data']:
+            for i, value in enumerate(self.config['cbr'][label]['feature_order']):
                 lineEdit = self.scrollAreaWidgetContents_3.findChild(QtWidgets.QLineEdit, f"lineEdit_{i}")
                 values.append(lineEdit)
             return values
@@ -639,7 +643,7 @@ class Ui_MainWindow(object):
         self.label_row_select.setText(_translate("MainWindow", "Row Selected :"))
         self.btn_data_processing.setText(_translate("MainWindow", "Data Processing"))
         self.label_12.setText(_translate("MainWindow", "Label:"))
-        self.comboBox_label.addItems(self.data)
+        self.comboBox_label.addItems(self.config['program']['data'])
         self.btn_autolabel.setText(_translate("MainWindow", "Auto label"))
         self.btn_calculate_12.setText(_translate("MainWindow", "Calculate"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Home"))
@@ -655,7 +659,6 @@ class Ui_MainWindow(object):
         self.btn_data_processing2.setText(_translate("MainWindow", "Data Processing"))
         self.btn_calculate2.setText(_translate("MainWindow", "Calculate"))
 
-    
 class NumberValidator(QtGui.QValidator):
     def validate(self, string, pos):
         # Check if the input string is empty, which is acceptable

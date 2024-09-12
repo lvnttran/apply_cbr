@@ -3,11 +3,13 @@ from model.classifies import Model
 
 class Predictor():
     def __init__(self):
-        self.model = Model(r'src\models\nn_J.h5')
+        self.model = Model(r'src\models\nn__epoch_1434_acc_0.9602.h5') #r'src\models\nn__epoch_1434_acc_0.9602.h5'
 
     # Function to create a dictionary from values and column names
     def create_value_dict(self, value_set, column_names):
-        value_dict = {col_name: [value_set[i]] for i, col_name in enumerate(column_names)}
+        new_column_names = ['diam_circle', 'larg', 'eps', 'Qte', 'diameter', 'hauteur',
+                      'long larg', 'developpé', 'angle', 'amorce', 'long', 'Dimension' ]
+        value_dict = {col_name: [value_set[column_names.index(col_name)]] for i, col_name in enumerate(new_column_names)}
         return value_dict
 
     def extract_cbr_values(self, input_data, column_names):
