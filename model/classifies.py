@@ -3,7 +3,7 @@ import numpy as np
 
 class Model:
     def __init__(self, model_path):
-        self.loaded_model = load_model(model_path)
+        self.loaded_model = load_model(model_path, compile=False)
 
     def predict(self, new_value):
         predictions = self.loaded_model.predict(new_value)
