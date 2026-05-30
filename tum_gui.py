@@ -202,7 +202,6 @@ class MainWindow(QtWidgets.QMainWindow):
         feature_map = {self.norm(f): i for i, f in enumerate(self.features)}
 
         values = []
-
         for key in feature_order:
             k = self.norm(key)
             if k in feature_map:
@@ -213,22 +212,53 @@ class MainWindow(QtWidgets.QMainWindow):
         cluster = predictor.predict_cluster(values)
         values.append(cluster)
 
-        ok, result = predictor.predict_time(values, 5, 5)
+        ok, result = predictor.predict_time(values, 5, self.spin_k.value())  # also respect spin_k
 
         if not ok:
             return
 
         self.time_result_box.setText(str(result["Predicted Value"]))
 
-        rows = result["Top Rows"]
-        self.table_cases.setRowCount(len(rows))
+        top_n_rows = result["Top Rows"]
+        self.table_cases.setRowCount(len(top_n_rows))
 
-        for i, r in enumerate(rows):
-            self.table_cases.setItem(i, 0, QtWidgets.QTableWidgetItem(str(r)))
-            self.table_cases.setItem(i, 1, QtWidgets.QTableWidgetItem(str(result["Predicted Value"])))
-            self.table_cases.setItem(i, 2, QtWidgets.QTableWidgetItem(str(cluster)))
-            self.table_cases.setItem(i, 3, QtWidgets.QTableWidgetItem(str(i + 1)))
-            self.table_cases.setItem(i, 4, QtWidgets.QTableWidgetItem(str(i + 1)))
+        # Column order: Similarity, Target Time, Quantity, Expanded Length, Amorce, Angle, Thickness, Diameter
+        # Map display columns to their keys in df_sheet_80_dict
+        col_keys = {
+            "Similarity": None,  # special: from tuple[2]
+            "Target Time": "Temps prévu",  # special: last key of the row dict
+            "Quantity": "Qte",
+            "Expanded Length": "developpé",
+            "Amorce": "Amorce",
+            "Angle": "angle",
+            "Thickness": "eps",
+            "Diameter": "diameter",
+        }
+
+        for i, (row_idx, local_sim, global_sim) in enumerate(top_n_rows):
+            # Fetch the actual Excel row
+            actual_row = predictor.df_sheet_80_dict[row_idx]
+            last_key = list(actual_row.keys())[-1]  # Target Time column
+
+            self.table_cases.setItem(i, 0, QtWidgets.QTableWidgetItem(str(global_sim)))
+            self.table_cases.setItem(i, 1, QtWidgets.QTableWidgetItem(str(actual_row[last_key])))
+
+            # Remaining columns — look up by key (case-insensitive fallback)
+            display_cols = ["Quantity", "Expanded Length", "Amorce", "Angle", "Thickness", "Diameter"]
+            keys = ["Qte", "developpé", "Amorce", "angle", "eps", "diameter"]
+
+            for col_offset, key in enumerate(keys):
+                # Try exact key first, then case-insensitive search
+                value = actual_row.get(key)
+                if value is None:
+                    value = next(
+                        (v for k, v in actual_row.items() if k.lower() == key.lower()),
+                        "N/A"
+                    )
+                self.table_cases.setItem(
+                    i, col_offset + 2,
+                    QtWidgets.QTableWidgetItem(str(value))
+                )
 
 
 # ---------------- MAIN ----------------
