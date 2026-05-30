@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBR Web Professional</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: #f4f6fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-left: 100px;
+            margin-right: 100px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 32px 36px 28px 36px;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2a3b4d;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            color: #5a6b7b;
+            margin-bottom: 24px;
+        }
+        .input-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            margin-bottom: 18px;
+        }
+        .input-table th, .input-table td {
+            padding: 8px 10px;
+            text-align: left;
+        }
+        .input-table th {
+            color: #3b4a5a;
+            font-weight: 500;
+            background: #f0f2f7;
+            border-radius: 6px 6px 0 0;
+        }
+        .input-table input {
+            width: 100%;
+            padding: 7px 8px;
+            border: 1px solid #cfd8dc;
+            border-radius: 4px;
+            font-size: 1rem;
+            background: #f9fafb;
+        }
+        .input-table select {
+            width: 100%;
+            padding: 7px 8px;
+            border: 1px solid #cfd8dc;
+            border-radius: 4px;
+            font-size: 1rem;
+            background: #f9fafb;
+        }
+        .actions {
+            margin: 18px 0 24px 0;
+        }
+        .actions button {
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 10px 22px;
+            margin-right: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .actions button:hover {
+            background: #1256a2;
+        }
+        .result-section {
+            margin-top: 18px;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .result-table th, .result-table td {
+            border: 1px solid #e0e4ea;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        .result-table th {
+            background: #e3eaf3;
+            color: #2a3b4d;
+            font-weight: 600;
+        }
+        .result-table td {
+            background: #f9fafb;
+        }
+        .result-label {
+            font-size: 1.1rem;
+            color: #1976d2;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .result-value {
+            font-size: 1.3rem;
+            color: #388e3c;
+            font-weight: 700;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 12px 4px; }
+            .input-table th, .input-table td, .result-table th, .result-table td { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CBR Manufacturing Time Estimator</h1>
+        <div class="subtitle">Nhập thông số sản phẩm, chọn nhãn (nếu biết), chuẩn hóa và dự đoán thời gian sản xuất.</div>
+
+        <form id="inputForm" onsubmit="return false;">
+            <div style="margin-bottom: 18px;">
+                <label style="font-weight:600;">New ETO Product (NPj) feature-values</label>
+                <table class="input-table">
+                    <tr>
+                        {% for feature in features %}
+                            <th>{{ feature }}</th>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for feature in features %}
+                            <td><input type="number" step="any" id="feature_{{ loop.index0 }}" placeholder="-999" /></td>
+                        {% endfor %}
+                    </tr>
+                </table>
+                <div class="actions" style="margin:0;">
+                    <button type="button" onclick="standardize()">Standardize</button>
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+                <div style="flex:1;">
+                    <label style="font-weight:600;">Determine the PF of the NPj</label>
+                    <button type="button" class="actions" style="margin:0 8px 0 0;padding:8px 18px;" onclick="predictLabel()">RBL identify product family</button>
+                </div>
+                <div style="min-width:120px;">
+                    <label style="font-weight:600;">PF Label:</label>
+                    <select id="labelSelect" style="width:100%;max-width:120px;">
+                        <option value="">None</option>
+                        {% for label in labels %}
+                            <option value="{{ label }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+                <div style="flex:1;">
+                    <label style="font-weight:600;">Estimate Manufacturing Time</label>
+                    <button type="button" class="actions" style="margin:0 8px 0 0;padding:8px 18px;" onclick="estimateTime()">Aggregate Time Estimation</button>
+                </div>
+                <div style="min-width:180px;">
+                    <label style="font-weight:600;">Estimated Time:</label>
+                    <input type="text" id="timeResult" class="result-value" style="width:100px;font-size:1.1rem;font-weight:600;color:#388e3c;background:#f9fafb;border:1px solid #cfd8dc;border-radius:4px;" readonly value="-" />
+                </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                <label style="font-weight:600;">Top k:</label>
+                <input type="number" id="spinK" min="1" max="15" value="5" style="width:50px;padding:4px 6px;" />
+                <span style="color:#5a6b7b;">similar cases for explainability</span>
+            </div>
+        </form>
+
+        <div class="result-section">
+            <table class="result-table" id="casesTable" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Similarity</th>
+                        <th>Target Time</th>
+                        <th>Quantity</th>
+                        <th>Expanded Length</th>
+                        <th>Amorce</th>
+                        <th>Angle</th>
+                        <th>Thickness</th>
+                        <th>Diameter</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div style="margin-top:10px;font-size:1.1rem;">
+            <b>Predicted Label:</b> <span class="result-value" id="labelResult">-</span>
+        </div>
+    </div>
+
+    <script>
+        function getPayload() {
+            const data = {};
+            const features = JSON.parse('{{ features|tojson|safe }}');
+            for (let i = 0; i < features.length; i++) {
+                const value = document.getElementById(`feature_${i}`).value;
+                data[features[i]] = value !== '' ? Number(value) : -999;
+            }
+            const label = document.getElementById('labelSelect').value;
+            if (label && label !== 'None') data.label = label;
+            return data;
+        }
+
+        function standardize() {
+            const features = JSON.parse('{{ features|tojson|safe }}');
+            for (let i = 0; i < features.length; i++) {
+                const input = document.getElementById(`feature_${i}`);
+                if (!input.value || input.value.trim() === "") {
+                    input.value = -999;
+                }
+            }
+        }
+
+        async function predictLabel() {
+            const payload = getPayload();
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const result = await response.json();
+                document.getElementById('labelResult').textContent = result.label || '-';
+                // Tự động cập nhật combobox PF Label
+                const labelSelect = document.getElementById('labelSelect');
+                if (result.label && labelSelect) {
+                    labelSelect.value = result.label;
+                }
+            } catch (err) {
+                document.getElementById('labelResult').textContent = 'Error';
+            }
+        }
+
+        async function estimateTime() {
+            const payload = getPayload();
+            // Lấy giá trị top k
+            const k = parseInt(document.getElementById('spinK').value) || 5;
+            try {
+                const response = await fetch(`/api/estimate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    let msg = result && result.error ? result.error : 'API error';
+                    document.getElementById('timeResult').value = msg;
+                    document.getElementById('labelResult').textContent = 'Error';
+                    document.getElementById('casesTable').style.display = 'none';
+                    return;
+                }
+                document.getElementById('timeResult').value = result.predicted_value !== undefined ? result.predicted_value : '-';
+                document.getElementById('labelResult').textContent = result.label || '-';
+                // Hiển thị bảng các case tương tự
+                const table = document.getElementById('casesTable');
+                const tbody = table.querySelector('tbody');
+                tbody.innerHTML = '';
+                if (result.top_rows && Array.isArray(result.top_rows)) {
+                    table.style.display = '';
+                    for (let i = 0; i < Math.min(result.top_rows.length, k); i++) {
+                        const sim = result.top_rows[i][2];           // global similarity score
+                        const actual = result.top_rows_data[i];      // real Excel row
+
+                        // last key = Target Time (same logic as Python)
+                        const keys = Object.keys(actual);
+                        const targetTime = actual[keys[keys.length - 1]];
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${sim}</td>
+                            <td>${targetTime}</td>
+                            <td>${actual['Qte'] ?? 'N/A'}</td>
+                            <td>${actual['developpé'] ?? 'N/A'}</td>
+                            <td>${actual['Amorce'] ?? actual['amorce'] ?? 'N/A'}</td>
+                            <td>${actual['angle'] ?? 'N/A'}</td>
+                            <td>${actual['eps'] ?? 'N/A'}</td>
+                            <td>${actual['diameter'] ?? 'N/A'}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    }
+                } else {
+                    table.style.display = 'none';
+                }
+            } catch (err) {
+                document.getElementById('timeResult').value = 'Error';
+                document.getElementById('labelResult').textContent = 'Error';
+                document.getElementById('casesTable').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
