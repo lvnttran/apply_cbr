@@ -3,302 +3,465 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CBR Web Professional</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <title>CBR Manufacturing Time Estimator</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: 'Roboto', Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: #f4f6fa;
-            margin: 0;
-            padding: 0;
+            color: #1a2332;
+            min-height: 100vh;
         }
-        .container {
-            margin-left: 100px;
-            margin-right: 100px;
-            margin: 40px auto;
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.75rem;
+        }
+
+        .header-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a2332;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+
+        .badge-info { background: #e6f1fb; color: #185fa5; }
+
+        .card {
             background: #fff;
+            border: 0.5px solid rgba(0,0,0,0.1);
             border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-            padding: 32px 36px 28px 36px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1rem;
         }
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #2a3b4d;
-            margin-bottom: 8px;
+
+        .step-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1rem;
         }
-        .subtitle {
+
+        .step-num {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #e6f1fb;
+            color: #185fa5;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-title { font-size: 13px; font-weight: 600; color: #1a2332; }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.75rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+
+        @media (max-width: 700px) {
+            .features-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .feat-cell label {
+            display: block;
+            font-size: 11px;
             color: #5a6b7b;
-            margin-bottom: 24px;
-        }
-        .input-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 8px;
-            margin-bottom: 18px;
-        }
-        .input-table th, .input-table td {
-            padding: 8px 10px;
-            text-align: left;
-        }
-        .input-table th {
-            color: #3b4a5a;
+            margin-bottom: 4px;
             font-weight: 500;
-            background: #f0f2f7;
-            border-radius: 6px 6px 0 0;
         }
-        .input-table input {
+
+        .feat-cell input {
             width: 100%;
-            padding: 7px 8px;
-            border: 1px solid #cfd8dc;
-            border-radius: 4px;
-            font-size: 1rem;
+            padding: 6px 8px;
+            font-size: 13px;
+            border: 0.5px solid rgba(0,0,0,0.15);
+            border-radius: 6px;
             background: #f9fafb;
+            color: #1a2332;
+            font-family: inherit;
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
-        .input-table select {
-            width: 100%;
-            padding: 7px 8px;
-            border: 1px solid #cfd8dc;
-            border-radius: 4px;
-            font-size: 1rem;
-            background: #f9fafb;
+
+        .feat-cell input:focus {
+            outline: none;
+            border-color: #378add;
+            box-shadow: 0 0 0 3px rgba(55,138,221,0.12);
         }
-        .actions {
-            margin: 18px 0 24px 0;
+
+        .action-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
-        .actions button {
-            background: #1976d2;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            font-size: 13px;
             font-weight: 500;
-            padding: 10px 22px;
-            margin-right: 12px;
+            border: 0.5px solid rgba(0,0,0,0.18);
+            border-radius: 7px;
+            background: #fff;
+            color: #1a2332;
             cursor: pointer;
-            transition: background 0.2s;
+            font-family: inherit;
+            transition: background 0.15s;
         }
-        .actions button:hover {
-            background: #1256a2;
+
+        .btn:hover { background: #f4f6fa; }
+
+        .btn-primary { background: #185fa5; color: #fff; border-color: #185fa5; }
+        .btn-primary:hover { background: #1256a2; }
+        .btn i { font-size: 15px; }
+
+        .select-field {
+            padding: 7px 10px;
+            font-size: 13px;
+            border: 0.5px solid rgba(0,0,0,0.15);
+            border-radius: 6px;
+            background: #f9fafb;
+            color: #1a2332;
+            font-family: inherit;
+            min-width: 110px;
         }
-        .result-section {
-            margin-top: 18px;
+
+        .metric-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-top: 0.75rem;
         }
+
+        .metric {
+            background: #f4f6fa;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+        }
+
+        .metric-label { font-size: 11px; color: #5a6b7b; margin-bottom: 4px; font-weight: 500; }
+        .metric-value { font-size: 22px; font-weight: 600; color: #1a2332; }
+        .metric-value.green { color: #1d9e75; }
+        .metric-value.blue  { color: #185fa5; }
+
         .result-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            font-size: 13px;
+            table-layout: fixed;
         }
-        .result-table th, .result-table td {
-            border: 1px solid #e0e4ea;
-            padding: 8px 10px;
-            text-align: center;
-        }
+
         .result-table th {
-            background: #e3eaf3;
-            color: #2a3b4d;
+            padding: 8px 10px;
+            text-align: left;
+            font-size: 11px;
             font-weight: 600;
+            color: #5a6b7b;
+            border-bottom: 0.5px solid rgba(0,0,0,0.1);
+            white-space: nowrap;
         }
+
         .result-table td {
-            background: #f9fafb;
+            padding: 9px 10px;
+            border-bottom: 0.5px solid rgba(0,0,0,0.07);
+            color: #1a2332;
         }
-        .result-label {
-            font-size: 1.1rem;
-            color: #1976d2;
+
+        .result-table tr:last-child td { border-bottom: none; }
+        .result-table tr:hover td { background: #f4f6fa; }
+
+        .sim-bar { display: flex; align-items: center; gap: 6px; }
+
+        .sim-track {
+            flex: 1;
+            height: 4px;
+            background: rgba(0,0,0,0.08);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .sim-fill { height: 100%; border-radius: 2px; background: #1d9e75; }
+
+        .sim-pct {
+            font-size: 12px;
             font-weight: 600;
-            margin-bottom: 6px;
+            min-width: 38px;
+            color: #1d9e75;
         }
-        .result-value {
-            font-size: 1.3rem;
-            color: #388e3c;
-            font-weight: 700;
+
+        .k-row { display: flex; align-items: center; gap: 8px; }
+
+        .k-row input[type=number] {
+            width: 60px;
+            padding: 6px 8px;
+            font-size: 13px;
+            border: 0.5px solid rgba(0,0,0,0.15);
+            border-radius: 6px;
+            background: #f9fafb;
+            color: #1a2332;
+            font-family: inherit;
         }
-        @media (max-width: 700px) {
-            .container { padding: 12px 4px; }
-            .input-table th, .input-table td, .result-table th, .result-table td { font-size: 0.95rem; }
+
+        .k-row span { font-size: 13px; color: #5a6b7b; }
+
+        .row-divider {
+            height: 0.5px;
+            background: rgba(0,0,0,0.07);
+            margin: 0.75rem 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>CBR Manufacturing Time Estimator</h1>
-        <div class="subtitle">Nhập thông số sản phẩm, chọn nhãn (nếu biết), chuẩn hóa và dự đoán thời gian sản xuất.</div>
+<div class="page">
 
-        <form id="inputForm" onsubmit="return false;">
-            <div style="margin-bottom: 18px;">
-                <label style="font-weight:600;">New ETO Product (NPj) feature-values</label>
-                <table class="input-table">
-                    <tr>
-                        {% for feature in features %}
-                            <th>{{ feature }}</th>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        {% for feature in features %}
-                            <td><input type="number" step="any" id="feature_{{ loop.index0 }}" placeholder="-999" /></td>
-                        {% endfor %}
-                    </tr>
-                </table>
-                <div class="actions" style="margin:0;">
-                    <button type="button" onclick="standardize()">Standardize</button>
-                </div>
+    <div class="header">
+        <div class="header-title">CBR manufacturing time estimator</div>
+        <span class="badge badge-info">
+            <i class="ti ti-cpu"></i> Case-based reasoning
+        </span>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="card">
+        <div class="step-pill">
+            <div class="step-num">1</div>
+            <div class="step-title">Product feature values</div>
+        </div>
+        <div class="features-grid">
+            {% for feature in features %}
+            <div class="feat-cell">
+                <label>{{ feature }}</label>
+                <input type="number" step="any" id="feature_{{ loop.index0 }}" placeholder="—" />
             </div>
+            {% endfor %}
+        </div>
+        <div style="margin-top:0.75rem;">
+            <button class="btn" type="button" onclick="standardize()">
+                <i class="ti ti-adjustments-horizontal"></i> Standardize
+            </button>
+        </div>
+    </div>
 
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-                <div style="flex:1;">
-                    <label style="font-weight:600;">Determine the PF of the NPj</label>
-                    <button type="button" class="actions" style="margin:0 8px 0 0;padding:8px 18px;" onclick="predictLabel()">RBL identify product family</button>
-                </div>
-                <div style="min-width:120px;">
-                    <label style="font-weight:600;">PF Label:</label>
-                    <select id="labelSelect" style="width:100%;max-width:120px;">
-                        <option value="">None</option>
-                        {% for label in labels %}
-                            <option value="{{ label }}">{{ label }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+    <!-- STEP 2 -->
+    <div class="card">
+        <div class="step-pill">
+            <div class="step-num">2</div>
+            <div class="step-title">Identify product family</div>
+        </div>
+        <div class="action-row">
+            <button class="btn btn-primary" type="button" onclick="predictLabel()">
+                <i class="ti ti-wand"></i> RBL identify product family
+            </button>
+            <select class="select-field" id="labelSelect">
+                <option value="">None</option>
+                {% for label in labels %}
+                <option value="{{ label }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="card">
+        <div class="step-pill">
+            <div class="step-num">3</div>
+            <div class="step-title">Estimate manufacturing time</div>
+        </div>
+        <div class="action-row" style="margin-bottom:0.75rem;">
+            <button class="btn btn-primary" type="button" onclick="estimateTime()">
+                <i class="ti ti-clock"></i> Aggregate time estimation
+            </button>
+            <div class="k-row">
+                <span>Top k:</span>
+                <input type="number" id="spinK" min="1" max="15" value="5" />
+                <span>similar cases</span>
             </div>
-
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-                <div style="flex:1;">
-                    <label style="font-weight:600;">Estimate Manufacturing Time</label>
-                    <button type="button" class="actions" style="margin:0 8px 0 0;padding:8px 18px;" onclick="estimateTime()">Aggregate Time Estimation</button>
-                </div>
-                <div style="min-width:180px;">
-                    <label style="font-weight:600;">Estimated Time:</label>
-                    <input type="text" id="timeResult" class="result-value" style="width:100px;font-size:1.1rem;font-weight:600;color:#388e3c;background:#f9fafb;border:1px solid #cfd8dc;border-radius:4px;" readonly value="-" />
-                </div>
+        </div>
+        <div class="metric-row">
+            <div class="metric">
+                <div class="metric-label">Estimated time</div>
+                <div class="metric-value green" id="timeResult">—</div>
             </div>
-
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-                <label style="font-weight:600;">Top k:</label>
-                <input type="number" id="spinK" min="1" max="15" value="5" style="width:50px;padding:4px 6px;" />
-                <span style="color:#5a6b7b;">similar cases for explainability</span>
+            <div class="metric">
+                <div class="metric-label">Product family</div>
+                <div class="metric-value blue" id="familyResult">—</div>
             </div>
-        </form>
+            <div class="metric">
+                <div class="metric-label">Cases retrieved</div>
+                <div class="metric-value" id="casesCount">—</div>
+            </div>
+        </div>
+    </div>
 
-        <div class="result-section">
-            <table class="result-table" id="casesTable" style="display:none;">
+    <!-- RESULTS TABLE -->
+    <div class="card" id="casesCard" style="display:none;">
+        <div class="section-label">Similar cases — explainability</div>
+        <div style="overflow-x:auto;">
+            <table class="result-table">
                 <thead>
                     <tr>
-                        <th>Similarity</th>
-                        <th>Target Time</th>
+                        <th style="width:130px;">Similarity</th>
+                        <th>Target time</th>
                         <th>Quantity</th>
-                        <th>Expanded Length</th>
+                        <th>Expanded L.</th>
                         <th>Amorce</th>
                         <th>Angle</th>
                         <th>Thickness</th>
                         <th>Diameter</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody id="casesBody"></tbody>
             </table>
-        </div>
-        <div style="margin-top:10px;font-size:1.1rem;">
-            <b>Predicted Label:</b> <span class="result-value" id="labelResult">-</span>
         </div>
     </div>
 
-    <script>
-        function getPayload() {
-            const data = {};
-            const features = JSON.parse('{{ features|tojson|safe }}');
-            for (let i = 0; i < features.length; i++) {
-                const value = document.getElementById(`feature_${i}`).value;
-                data[features[i]] = value !== '' ? Number(value) : -999;
-            }
-            const label = document.getElementById('labelSelect').value;
-            if (label && label !== 'None') data.label = label;
-            return data;
-        }
+</div>
 
-        function standardize() {
-            const features = JSON.parse('{{ features|tojson|safe }}');
-            for (let i = 0; i < features.length; i++) {
-                const input = document.getElementById(`feature_${i}`);
-                if (!input.value || input.value.trim() === "") {
-                    input.value = -999;
-                }
-            }
-        }
+<script>
+    const FEATURES = {{ features|tojson|safe }};
 
-        async function predictLabel() {
-            const payload = getPayload();
-            try {
-                const response = await fetch('/api/predict', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
+    function fmt(val) {
+        if (val === undefined || val === null || val === '') return '—';
+        const n = parseFloat(val);
+        return isNaN(n) ? val : n.toFixed(1);
+    }
+
+    function getPayload() {
+        const data = {};
+        for (let i = 0; i < FEATURES.length; i++) {
+            const v = document.getElementById('feature_' + i).value;
+            data[FEATURES[i]] = v !== '' ? Number(v) : -999;
+        }
+        const label = document.getElementById('labelSelect').value;
+        if (label && label !== 'None') data.label = label;
+        return data;
+    }
+
+    function standardize() {
+        for (let i = 0; i < FEATURES.length; i++) {
+            const inp = document.getElementById('feature_' + i);
+            if (!inp.value || inp.value.trim() === '') inp.value = -999;
+        }
+    }
+
+    async function predictLabel() {
+        const payload = getPayload();
+        try {
+            const res = await fetch('/api/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            if (result.label) {
+                document.getElementById('labelSelect').value = result.label;
+                document.getElementById('familyResult').textContent = result.label;
+            }
+        } catch (e) {
+            console.error('predictLabel error', e);
+        }
+    }
+
+    async function estimateTime() {
+        const payload = getPayload();
+        const k = parseInt(document.getElementById('spinK').value) || 5;
+        payload.k = k;
+        try {
+            const res = await fetch('/api/estimate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            if (!res.ok) {
+                document.getElementById('timeResult').textContent = result.error || 'Error';
+                return;
+            }
+            document.getElementById('timeResult').textContent =
+                result.predicted_value !== undefined ? parseFloat(result.predicted_value).toFixed(3) : '—';
+            document.getElementById('familyResult').textContent = result.label || '—';
+
+            const tbody = document.getElementById('casesBody');
+            tbody.innerHTML = '';
+
+            if (result.top_rows && Array.isArray(result.top_rows)) {
+                document.getElementById('casesCard').style.display = '';
+                const rows = result.top_rows.slice(0, k);
+                const data = result.top_rows_data ? result.top_rows_data.slice(0, k) : [];
+                document.getElementById('casesCount').textContent = rows.length;
+
+                rows.forEach((row, i) => {
+                    const sim = parseFloat(row[2]);
+                    const pct = Math.round((Math.max(0, Math.min(1, sim)) * 100) + 5);
+                    const actual = data[i] || {};
+                    const keys = Object.keys(actual);
+                    const targetTime = keys.length ? fmt(actual[keys[keys.length - 1]]) : '—';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <div class="sim-bar">
+                                <div class="sim-track">
+                                    <div class="sim-fill" style="width:${pct}%"></div>
+                                </div>
+                                <span class="sim-pct">${pct}%</span>
+                            </div>
+                        </td>
+                        <td><strong>${targetTime}</strong></td>
+                        <td>${fmt(actual['Qte'])}</td>
+                        <td>${fmt(actual['developpé'])}</td>
+                        <td>${fmt(actual['Amorce'] ?? actual['amorce'])}</td>
+                        <td>${fmt(actual['angle'])}</td>
+                        <td>${fmt(actual['eps'])}</td>
+                        <td>${fmt(actual['diameter'])}</td>
+                    `;
+                    tbody.appendChild(tr);
                 });
-                const result = await response.json();
-                document.getElementById('labelResult').textContent = result.label || '-';
-                // Tự động cập nhật combobox PF Label
-                const labelSelect = document.getElementById('labelSelect');
-                if (result.label && labelSelect) {
-                    labelSelect.value = result.label;
-                }
-            } catch (err) {
-                document.getElementById('labelResult').textContent = 'Error';
+            } else {
+                document.getElementById('casesCard').style.display = 'none';
             }
+        } catch (e) {
+            document.getElementById('timeResult').textContent = 'Error';
+            document.getElementById('casesCard').style.display = 'none';
         }
-
-        async function estimateTime() {
-            const payload = getPayload();
-            // Lấy giá trị top k
-            const k = parseInt(document.getElementById('spinK').value) || 5;
-            try {
-                const response = await fetch(`/api/estimate`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
-                });
-                const result = await response.json();
-                if (!response.ok) {
-                    let msg = result && result.error ? result.error : 'API error';
-                    document.getElementById('timeResult').value = msg;
-                    document.getElementById('labelResult').textContent = 'Error';
-                    document.getElementById('casesTable').style.display = 'none';
-                    return;
-                }
-                document.getElementById('timeResult').value = result.predicted_value !== undefined ? result.predicted_value : '-';
-                document.getElementById('labelResult').textContent = result.label || '-';
-                // Hiển thị bảng các case tương tự
-                const table = document.getElementById('casesTable');
-                const tbody = table.querySelector('tbody');
-                tbody.innerHTML = '';
-                if (result.top_rows && Array.isArray(result.top_rows)) {
-                    table.style.display = '';
-                    for (let i = 0; i < Math.min(result.top_rows.length, k); i++) {
-                        const sim = result.top_rows[i][2];           // global similarity score
-                        const actual = result.top_rows_data[i];      // real Excel row
-
-                        // last key = Target Time (same logic as Python)
-                        const keys = Object.keys(actual);
-                        const targetTime = actual[keys[keys.length - 1]];
-
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${sim}</td>
-                            <td>${targetTime}</td>
-                            <td>${actual['Qte'] ?? 'N/A'}</td>
-                            <td>${actual['developpé'] ?? 'N/A'}</td>
-                            <td>${actual['Amorce'] ?? actual['amorce'] ?? 'N/A'}</td>
-                            <td>${actual['angle'] ?? 'N/A'}</td>
-                            <td>${actual['eps'] ?? 'N/A'}</td>
-                            <td>${actual['diameter'] ?? 'N/A'}</td>
-                        `;
-                        tbody.appendChild(tr);
-                    }
-                } else {
-                    table.style.display = 'none';
-                }
-            } catch (err) {
-                document.getElementById('timeResult').value = 'Error';
-                document.getElementById('labelResult').textContent = 'Error';
-                document.getElementById('casesTable').style.display = 'none';
-            }
-        }
-    </script>
+    }
+</script>
 </body>
 </html>

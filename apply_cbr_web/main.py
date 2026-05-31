@@ -99,6 +99,7 @@ def api_estimate():
     payload = request.get_json(force=True)
     features = parse_features(payload)
     label = payload.get("label")
+    n = int(payload.get("k", 5))  # ADD THIS — read k from payload, default 5
 
     if label is None:
         label = predictor.predict(features)
@@ -120,13 +121,11 @@ def api_estimate():
     cluster = predictor_model.predict_cluster(values)
     values.append(cluster)
 
-    ok, result = predictor_model.predict_time(values, k=5, n=5)
+    ok, result = predictor_model.predict_time(values, k=50, n=n)  # k=50 pool, n=user's choice
     if not ok:
         return jsonify({"error": result}), 500
 
-    # ADD THIS LINE
     top_rows_data = [predictor_model.df_sheet_80_dict[row[0]] for row in result["Top Rows"]]
-
     response_dto = EstimateResponseDTO(
         label=label,
         cluster=cluster,

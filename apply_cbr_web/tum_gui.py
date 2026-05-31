@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from utils.predictor import Predictor
+from utils.predictor_nn import Predictor
 from utils.kd_cbr_base import KdCbrBase
 
 import sys
